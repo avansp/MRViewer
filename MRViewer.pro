@@ -14,8 +14,10 @@ TEMPLATE = app
 CONFIG -= app_bundle
 
 SOURCES += main.cpp\
-        mainwindow.cpp
+        mainwindow.cpp \
+        QGraphicsImageView.cpp
 
-HEADERS  += mainwindow.h
+HEADERS  += mainwindow.h \
+    QGraphicsImageView.h
 
 FORMS    += mainwindow.ui
