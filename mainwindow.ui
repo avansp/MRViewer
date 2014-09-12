@@ -16,7 +16,7 @@
   <widget class="QWidget" name="centralWidget">
    <layout class="QHBoxLayout" name="horizontalLayout">
     <item>
-     <widget class="QGraphicsImageView" name="imgViewer"/>
+     <widget class="QGraphicsDICOMView" name="imgViewer"/>
     </item>
     <item>
      <widget class="QTabWidget" name="imgInfoTabWidget">
@@ -64,16 +64,25 @@
     <property name="title">
      <string>File</string>
     </property>
+    <addaction name="actionOpen_DICOM_file"/>
    </widget>
    <addaction name="menuFile"/>
   </widget>
+  <action name="actionOpen_DICOM_file">
+   <property name="text">
+    <string>Open DICOM file</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
   <customwidget>
-   <class>QGraphicsImageView</class>
+   <class>QGraphicsDICOMView</class>
    <extends>QGraphicsView</extends>
-   <header>QGraphicsImageView.h</header>
+   <header>qgraphicsdicomview.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

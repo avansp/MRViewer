@@ -11,13 +11,11 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = MRViewer
 TEMPLATE = app
 
-CONFIG -= app_bundle
-
 SOURCES += main.cpp\
         mainwindow.cpp \
-        QGraphicsImageView.cpp
+    QGraphicsDICOMView.cpp
 
 HEADERS  += mainwindow.h \
-    QGraphicsImageView.h
+    QGraphicsDICOMView.h
 
 FORMS    += mainwindow.ui
