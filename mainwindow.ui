@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>656</width>
-    <height>466</height>
+    <width>758</width>
+    <height>539</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -20,19 +20,38 @@
     </item>
     <item>
      <widget class="QTabWidget" name="imgInfoTabWidget">
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
       <widget class="QWidget" name="headerTab">
        <attribute name="title">
-        <string>Tab 1</string>
+        <string>Tags</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout">
         <item>
-         <widget class="QListView" name="dicomList"/>
+         <widget class="QTableWidget" name="dicomList">
+          <column>
+           <property name="text">
+            <string>ID</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Name</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Value</string>
+           </property>
+          </column>
+         </widget>
         </item>
        </layout>
       </widget>
       <widget class="QWidget" name="LUTTab">
        <attribute name="title">
-        <string>Tab 2</string>
+        <string>LUT</string>
        </attribute>
       </widget>
      </widget>
@@ -46,6 +65,7 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
+   <addaction name="actionOpen_DICOM_file"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <widget class="QMenuBar" name="menuBar">
@@ -53,12 +73,12 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>656</width>
+     <width>758</width>
      <height>22</height>
     </rect>
    </property>
    <property name="nativeMenuBar">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <widget class="QMenu" name="menuFile">
     <property name="title">
@@ -66,14 +86,48 @@
     </property>
     <addaction name="actionOpen_DICOM_file"/>
    </widget>
+   <widget class="QMenu" name="menuView">
+    <property name="title">
+     <string>View</string>
+    </property>
+    <addaction name="actionAutoFitImage"/>
+   </widget>
+   <widget class="QMenu" name="menuDebug">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
+    <property name="title">
+     <string>Debug</string>
+    </property>
+    <addaction name="actionDICOMTest"/>
+   </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuView"/>
+   <addaction name="menuDebug"/>
   </widget>
   <action name="actionOpen_DICOM_file">
+   <property name="icon">
+    <iconset resource="MRViewer.qrc">
+     <normaloff>:/icons/Image.png</normaloff>:/icons/Image.png</iconset>
+   </property>
    <property name="text">
     <string>Open DICOM file</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="actionAutoFitImage">
+   <property name="text">
+    <string>Fit image to frame</string>
+   </property>
+   <property name="toolTip">
+    <string>Auto fit image</string>
+   </property>
+  </action>
+  <action name="actionDICOMTest">
+   <property name="text">
+    <string>DICOM Header Test</string>
    </property>
   </action>
  </widget>
@@ -85,6 +139,8 @@
    <header>qgraphicsdicomview.h</header>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="MRViewer.qrc"/>
+ </resources>
  <connections/>
 </ui>

@@ -18,6 +18,10 @@ public:
 private slots:
     void on_actionOpen_DICOM_file_triggered();
 
+    void on_actionAutoFitImage_triggered();
+
+    void on_actionDICOMTest_triggered();
+
 private:
     Ui::MainWindow *ui;
 };

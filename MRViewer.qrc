@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>icons/Image.png</file>
+        <file>files/dicom.dic</file>
+    </qresource>
+</RCC>
