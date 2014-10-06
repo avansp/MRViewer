@@ -26,10 +26,10 @@ public:
     const QMRImage *GetQMRImage();
 
 signals:
-    void DICOMImageChanged();
+    void DICOMImageChanged(const QMRImage *);
 
 protected slots:
-    void OnDICOMImageChanged();
+    void OnDICOMImageChanged(const QMRImage *);
 
 protected:
     void RefreshView();

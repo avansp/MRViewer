@@ -46,7 +46,7 @@ QGraphicsDICOMView::QGraphicsDICOMView(QWidget *parent) :
     this->setScene(d->scene);
 
     // signaling
-    connect(this,SIGNAL(DICOMImageChanged()),SLOT(OnDICOMImageChanged()));
+    connect(this,SIGNAL(DICOMImageChanged(const QMRImage *)),SLOT(OnDICOMImageChanged(const QMRImage *)));
 }
 
 QGraphicsDICOMView::~QGraphicsDICOMView()
@@ -74,13 +74,13 @@ void QGraphicsDICOMView::SetImage(const QString &_dicomFilename)
     } else {
         d->_mriPixmapItem = d->scene->addPixmap(QPixmap::fromImage(d->mri->GetFilteredQImage()));
     }
-    emit DICOMImageChanged();
+    emit DICOMImageChanged(this->d->mri);
 }
 
 /**
  * @brief QGraphicsDICOMView::OnDICOMImageChanged does default actions upon new image changes
  */
-void QGraphicsDICOMView::OnDICOMImageChanged()
+void QGraphicsDICOMView::OnDICOMImageChanged(const QMRImage *)
 {
     // set bookkeeping properties
     d->largestViewArea = d->_mriPixmapItem->boundingRect();

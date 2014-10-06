@@ -16,15 +16,14 @@ SOURCES += main.cpp\
     QGraphicsDICOMView.cpp \
     QItkGrayscaleImage.cpp \
     QMRImage.cpp \
-    DICOMTag.cpp \
-    DICOMUtils.cpp
+    QDICOMHeaderWidget.cpp
 
 HEADERS  += mainwindow.h \
     QGraphicsDICOMView.h \
     QItkGrayscaleImage.h \
     QMRImage.h \
-    DICOMTag.h \
-    DICOMUtils.h
+    DICOMTagDefs.h \
+    QDICOMHeaderWidget.h
 
 FORMS    += mainwindow.ui
 

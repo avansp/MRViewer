@@ -29,22 +29,13 @@
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout">
         <item>
-         <widget class="QTableWidget" name="dicomList">
-          <column>
-           <property name="text">
-            <string>ID</string>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string>Name</string>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string>Value</string>
-           </property>
-          </column>
+         <widget class="QDICOMHeaderWidget" name="dicomList">
+          <property name="frameShape">
+           <enum>QFrame::StyledPanel</enum>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Raised</enum>
+          </property>
          </widget>
         </item>
        </layout>
@@ -136,7 +127,13 @@
   <customwidget>
    <class>QGraphicsDICOMView</class>
    <extends>QGraphicsView</extends>
-   <header>qgraphicsdicomview.h</header>
+   <header>QGraphicsDICOMView.h</header>
+  </customwidget>
+  <customwidget>
+   <class>QDICOMHeaderWidget</class>
+   <extends>QFrame</extends>
+   <header>QDICOMHeaderWidget.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources>

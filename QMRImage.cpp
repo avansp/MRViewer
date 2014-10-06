@@ -104,11 +104,20 @@ QImage QMRImage::GetFilteredQImage()
 
 }
 
-void QMRImage::GetDICOMHeaders() const
+QString QMRImage::GetDICOMTagAsString(const char *_group, const char *_elmt) const
 {
+    if( this->gdcmImageIO.IsNull() ) return QString();
+
+    QString groupElmt = QString(_group) + "|" + QString(_elmt);
+    std::string tagValue;
+    return this->gdcmImageIO->GetValueFromTag(groupElmt.toUtf8().constData(),tagValue) ? QString(tagValue.data()) : QString();
+}
+
+void QMRImage::GetDICOMTagAsString(const char *_group, const char *_elmt, std::string &_value) const
+{
+    _value.clear();
     if( this->gdcmImageIO.IsNull() ) return;
 
-    // try to print headers first
-    std::string tagValue;
-    qDebug() << "(0010,0020) -"  << (this->gdcmImageIO->GetValueFromTag("0010|0020",tagValue) ? tagValue.data() : "NA");
+    QString groupElmt = QString(_group) + "|" + QString(_elmt);
+    this->gdcmImageIO->GetValueFromTag(groupElmt.toUtf8().constData(),_value);
 }

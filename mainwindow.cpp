@@ -14,6 +14,10 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    // --- signaling & slotting
+
+    // QGraphicsDICOMView::DICOMImageChange --> QDICOMHeaderWidget::ReadDICOMFromQMRImage
+    connect(ui->imgViewer,SIGNAL(DICOMImageChanged(const QMRImage*)),ui->dicomList,SLOT(ReadDICOMFromQMRImage(const QMRImage *)));
 }
 
 MainWindow::~MainWindow()
@@ -23,6 +27,9 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_actionOpen_DICOM_file_triggered()
 {
+    // This slot is called by user to open a DICOM image file.
+    // We should open and show it to the imgViewer widget.
+
     // get the image filename
     QString filename = QFileDialog::getOpenFileName(this, "Open DICOM Image",
                                                     "",
@@ -31,22 +38,31 @@ void MainWindow::on_actionOpen_DICOM_file_triggered()
 
     // show image
     ui->imgViewer->SetImage(filename);
-
-    // show dicom headers
-    const QMRImage *qmri = ui->imgViewer->GetQMRImage();
-    if( qmri ) qmri->GetDICOMHeaders();
 }
 
 void MainWindow::on_actionAutoFitImage_triggered()
 {
+    // Resize the image to fit the imgViewer widget.
     ui->imgViewer->SetViewMode(QGraphicsDICOMView::AutoFit);
 }
 
-#include "DICOMUtils.h"
+
+
+
+
+// -- THIS BLOCK ONLY FOR TESTING. SHOULD BE REMOVED WHEN THE TEST IS CORRECT
+#include "DICOMTagDefs.h"
 void MainWindow::on_actionDICOMTest_triggered()
 {
-    // dicom.dic from the resource
-    DICOMUtils::DICOMTagList dcmTags;
-    if( !DICOMUtils::ReadDICOMDictionary(":/files/dicom.dic", dcmTags) )
-        qDebug() << "ERROR READING DICOM DICTIONARY";
+    /*
+    for( int i=0; i<DICOMInfo::NumImageTags; i++ )
+    {
+        qDebug() << "(" << DICOMInfo::Image[i].group.data() << "," << DICOMInfo::Image[i].elmt.data() << ") - " << DICOMInfo::Image[i].name.data();
+    }
+    */
+
+    // Test open DICOM and get some parameters
+
 }
+// -- END OF THE TESTING BLOCK
+// PLEASE ADD NEW METHOD NOT BELOW THIS TESTING BLOCK

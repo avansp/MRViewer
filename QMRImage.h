@@ -46,7 +46,8 @@ public:
 
     void Print(std::ostream &_of) const;
 
-    void GetDICOMHeaders() const;
+    QString GetDICOMTagAsString(const char *_group, const char *_elmt) const;
+    void GetDICOMTagAsString(const char *_group, const char *_elmt, std::string &_value) const;
 
 protected:
     void SetupFilteredImage();
