@@ -51,7 +51,7 @@ void MainWindow::on_actionAutoFitImage_triggered()
 
 
 // -- THIS BLOCK ONLY FOR TESTING. SHOULD BE REMOVED WHEN THE TEST IS CORRECT
-#include "DICOMTagDefs.h"
+//#include "DICOMTagDefs.h"
 void MainWindow::on_actionDICOMTest_triggered()
 {
     /*

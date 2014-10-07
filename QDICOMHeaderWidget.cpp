@@ -1,6 +1,5 @@
 #include "QDICOMHeaderWidget.h"
 #include "QMRImage.h"
-#include "DICOMTagDefs.h"
 
 #include <QComboBox>
 #include <QTableWidget>
@@ -34,11 +33,8 @@ QDICOMHeaderWidget::QDICOMHeaderWidget(QWidget *parent) :
 
     // setup filter: match with DICOMInfoType enum values
     QStringList filterList;
-    filterList << "Patient" << "MR Parameters" << "Study Information" << "3D Geometry" << "Image Information";
+    filterList << "All" << "Patient" << "MR Parameters" << "Study Information" << "3D Geometry" << "Image Information" << "Other";
     this->filterWidget->insertItems(0, filterList);
-
-    // setup DICOM header list
-    this->dicomInfo = new DICOMInfo();
 
     // signaling changes in filter
     connect(this->filterWidget, SIGNAL(currentIndexChanged(int)), this, SLOT(FillTable(int)));
@@ -46,96 +42,51 @@ QDICOMHeaderWidget::QDICOMHeaderWidget(QWidget *parent) :
 
 QDICOMHeaderWidget::~QDICOMHeaderWidget()
 {
-    if( this->dicomInfo ) delete this->dicomInfo;
 }
 
 void QDICOMHeaderWidget::ReadDICOMFromQMRImage(const QMRImage *_img)
 {
     Q_ASSERT(_img);
 
-    // PATIENT_INFO
-    for( unsigned long i=0; i<this->dicomInfo->PatientInfo.size(); i++ )
-    {
-        _img->GetDICOMTagAsString(this->dicomInfo->PatientInfo[i].group.data(),
-                                  this->dicomInfo->PatientInfo[i].elmt.data(),
-                                  this->dicomInfo->PatientInfo[i].value);
-    }
-
-
-    // MR_INFO
-    for( unsigned long i=0; i<this->dicomInfo->MRParamInfo.size(); i++ )
-    {
-        _img->GetDICOMTagAsString(this->dicomInfo->MRParamInfo[i].group.data(),
-                                  this->dicomInfo->MRParamInfo[i].elmt.data(),
-                                  this->dicomInfo->MRParamInfo[i].value);
-    }
-
-
-    // STUDY_INFO
-    for( unsigned long i=0; i<this->dicomInfo->StudyInfo.size(); i++ )
-    {
-        _img->GetDICOMTagAsString(this->dicomInfo->StudyInfo[i].group.data(),
-                                  this->dicomInfo->StudyInfo[i].elmt.data(),
-                                  this->dicomInfo->StudyInfo[i].value);
-    }
-
-
-    // GEOMETRY_INFO
-    for( unsigned long i=0; i<this->dicomInfo->GeometryInfo.size(); i++ )
-    {
-        _img->GetDICOMTagAsString(this->dicomInfo->GeometryInfo[i].group.data(),
-                                  this->dicomInfo->GeometryInfo[i].elmt.data(),
-                                  this->dicomInfo->GeometryInfo[i].value);
-    }
-
-
-    // IMAGE_INFO
-    for( unsigned long i=0; i<this->dicomInfo->ImageInfo.size(); i++ )
-    {
-        _img->GetDICOMTagAsString(this->dicomInfo->ImageInfo[i].group.data(),
-                                  this->dicomInfo->ImageInfo[i].elmt.data(),
-                                  this->dicomInfo->ImageInfo[i].value);
-
-    }
-
+    this->dicomInfo = _img->GetDICOMInfoVector();
     FillTable(this->filterWidget->currentIndex());
 }
 
 
 void QDICOMHeaderWidget::FillTable(int _filterIndex)
 {
-
-    // select which info
-    DICOMInfo::DICOMVector *dicomInfoPtr;
-    switch(_filterIndex)
+    if( _filterIndex==0 ) // ALL
     {
-    case 0:
-        dicomInfoPtr = &(this->dicomInfo->PatientInfo);
-        break;
-    case 1:
-        dicomInfoPtr = &(this->dicomInfo->MRParamInfo);
-        break;
-    case 2:
-        dicomInfoPtr = &(this->dicomInfo->StudyInfo);
-        break;
-    case 3:
-        dicomInfoPtr = &(this->dicomInfo->GeometryInfo);
-        break;
-    case 4:
-        dicomInfoPtr = &(this->dicomInfo->ImageInfo);
-        break;
+        this->dicomHeaderWidget->setRowCount(dicomInfo.size());
+        for( int i=0; i<this->dicomHeaderWidget->rowCount(); i++ )
+        {
+            DICOMInfo::DICOMTagType d = dicomInfo[i];
+            this->dicomHeaderWidget->setItem(i,0,new QTableWidgetItem(
+                QString("(") + d.group.data() + "," + d.elmt.data() +  ")"));
+            this->dicomHeaderWidget->setItem(i,1,new QTableWidgetItem(d.name.data()));
+            this->dicomHeaderWidget->setItem(i,2, new QTableWidgetItem(d.value.data()));
+        }
+    } else {
+
+        this->dicomHeaderWidget->setRowCount(0);
+        int nrows = 0;
+
+        // search group Info
+        for( unsigned long i=0; i<dicomInfo.size(); i++ )
+        {
+            DICOMInfo::DICOMTagType d = dicomInfo[i];
+            if( d.groupInfo != _filterIndex-1 ) continue;
+
+            // insert one row
+            this->dicomHeaderWidget->setRowCount(++nrows);
+
+            this->dicomHeaderWidget->setItem(nrows-1,0,new QTableWidgetItem(
+                QString("(") + d.group.data() + "," + d.elmt.data() +  ")"));
+            this->dicomHeaderWidget->setItem(nrows-1,1,new QTableWidgetItem(d.name.data()));
+            this->dicomHeaderWidget->setItem(nrows-1,2, new QTableWidgetItem(d.value.data()));
+        }
     }
 
-    // populate the table
-    this->dicomHeaderWidget->setRowCount(dicomInfoPtr->size());
-    for( int i=0; i<this->dicomHeaderWidget->rowCount(); i++ )
-    {
-        DICOMInfo::DICOMTagType d = dicomInfoPtr->at(i);
-        this->dicomHeaderWidget->setItem(i,0,new QTableWidgetItem(
-            QString("(") + d.group.data() + "," + d.elmt.data() +  ")"));
-        this->dicomHeaderWidget->setItem(i,1,new QTableWidgetItem(d.name.data()));
-        this->dicomHeaderWidget->setItem(i,2, new QTableWidgetItem(d.value.data()));
-    }
-
+    // fit
     this->dicomHeaderWidget->resizeColumnsToContents();
 }

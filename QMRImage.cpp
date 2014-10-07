@@ -21,6 +21,9 @@ QMRImage::QMRImage(const QString &_filename):
     gdcmImageIO = itk::GDCMImageIO::New();
 }
 
+QMRImage::~QMRImage()
+{
+}
 
 bool QMRImage::Load()
 {
@@ -54,6 +57,17 @@ bool QMRImage::Load()
     const RawImageType::SizeType imgSize = rawImage->GetLargestPossibleRegion().GetSize();
     this->rows = imgSize[0];
     this->columns = imgSize[1];
+
+    // read in DICOM headers
+    if( this->rawImage.IsNotNull() )
+    {
+        for( unsigned long i=0; i<this->dicomInfo.info.size(); i++ )
+        {
+            this->GetDICOMTagAsString(this->dicomInfo.info[i].group.data(),
+                                      this->dicomInfo.info[i].elmt.data(),
+                                      this->dicomInfo.info[i].value);
+        }
+    }
 
     SetupFilteredImage();
 
@@ -120,4 +134,9 @@ void QMRImage::GetDICOMTagAsString(const char *_group, const char *_elmt, std::s
 
     QString groupElmt = QString(_group) + "|" + QString(_elmt);
     this->gdcmImageIO->GetValueFromTag(groupElmt.toUtf8().constData(),_value);
+}
+
+float QMRImage::GetDICOMTagAsFloat(const char *_name)
+{
+    return 0;
 }

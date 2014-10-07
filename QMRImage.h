@@ -5,12 +5,26 @@
 #include "itkGDCMImageIO.h"
 #include <QString>
 #include <QImage>
+#include "DICOMInfo.h"
 
+/**
+ * @brief The QMRImage class is the swiss-army knife class for handle DICOM MR images.
+ *
+ * Typical example to use:
+ * \code
+ * QMRImage *mri = new QMRImage(mri_File_name);
+ * mri->Load();
+ * QImage img = mri->GetFilteredQImage;
+ * \endcode
+ *
+ */
 class QMRImage
 {
 public:
     QMRImage(const char *_filename=0);
     QMRImage(const QString &_filename);
+
+    ~QMRImage();
 
     // we only handle unsigned short with 2 dimension for cardiac MRI
     typedef itk::Image< unsigned short, 2 > ImageType;
@@ -49,6 +63,14 @@ public:
     QString GetDICOMTagAsString(const char *_group, const char *_elmt) const;
     void GetDICOMTagAsString(const char *_group, const char *_elmt, std::string &_value) const;
 
+    float GetDICOMTagAsFloat(const char *_name);
+
+    //!< Inline convenience get DICOM values
+    inline float GetWindowCenter() { return this->GetDICOMTagAsFloat("Window Center"); }
+    inline float GetWindowLevel() { return this->GetDICOMTagAsFloat("Window Level"); }
+
+    DICOMInfo::DICOMVector const &GetDICOMInfoVector() const { return this->dicomInfo.info; }
+
 protected:
     void SetupFilteredImage();
 
@@ -63,8 +85,11 @@ private:
     // filteredImage is the rawImage after being filtered (window level, etc.)
     RawImageType::Pointer filteredImage;
 
-    // handler to the DICOM tags
+    // handler to the DICOM tags (keep it in case we need it)
     itk::GDCMImageIO::Pointer gdcmImageIO;
+
+    // DICOM info vector
+    DICOMInfo dicomInfo;
 
 };
 

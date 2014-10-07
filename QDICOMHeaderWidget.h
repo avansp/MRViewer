@@ -1,13 +1,13 @@
 #ifndef QDICOMHEADERWIDGET_H
 #define QDICOMHEADERWIDGET_H
 
+#include "DICOMInfo.h"
 #include <QFrame>
 
 // forward class declaration
 class QComboBox;
 class QTableWidget;
 class QMRImage;
-struct DICOMInfo;
 
 //! QDICOMHeaderWidget
 /*!
@@ -32,7 +32,7 @@ public slots:
 private:
     QComboBox *filterWidget;                /*!< Filter the header view  */
     QTableWidget *dicomHeaderWidget;        /*!< Contains 3 columns of DICOM header list: (Group,Elmt) | Name | Value  */
-    DICOMInfo *dicomInfo;                   /*!< Retrieved DICOM header information */
+    DICOMInfo::DICOMVector dicomInfo;       /*!< A pointer to the DICOM info vector */
 };
 
 #endif // QDICOMHEADERWIDGET_H
